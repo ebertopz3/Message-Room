@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, NgZone, OnInit} from '@angular/core';
 import { EnumKeysStorage } from '../core/enums/enum-keys-storage';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {AuthService} from "./auth-service";
+import {AuthService} from './auth-service';
+import {Storage} from '@capacitor/storage';
+import {Router} from "@angular/router";
+import firebase from "firebase/compat/app";
 
 
 @Component({
@@ -18,20 +21,18 @@ export class AuthPage implements OnInit {
   ];
   public password = [
     {type: 'required', message: 'El password es requerido'},
-    {type: 'minLength', message: 'Coloca al menos 5 caracteres.'},
+    {type: 'minlength', message: 'Coloca al menos 5 caracteres.'},
   ];
   constructor(
     private _fb: FormBuilder,
     private _authService: AuthService,
+    private _zone: NgZone,
+    private _router: Router,
   ) {
     this.form = _fb.group({
-      email: new  FormControl('', Validators.compose([Validators.required, Validators.email])),
-      password: new  FormControl('', Validators.compose([Validators.required, Validators.minLength(5)])),
-      register: new FormControl(false),
-      name: new FormControl(''),
-    });
-    this.form.get('register').valueChanges.subscribe((value) => {
-      this.validControl(value);
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(5)]],
+      register: [false],
     });
   }
 
@@ -40,19 +41,47 @@ export class AuthPage implements OnInit {
 
   public onSave(): void {
     if (this.form.get('register').value) {
-      this._authService.createUser
+      // eslint-disable-next-line no-underscore-dangle
+      this._authService.createUser(this.form.getRawValue()).then((value: firebase.auth.UserCredential) => {
+        if (value.user.email) {
+          this.setUserAndToken(value);
+          this.direct('/tabs/tab1');
+        }
+      });
     } else {
-
+      // eslint-disable-next-line no-underscore-dangle
+      this._authService.authUser(this.form.getRawValue()).then((res) => {
+        if (res.user.email) {
+          this.setUserAndToken(res);
+          this.direct('/tabs/tab1');
+        }
+        console.log('datos de respuesta', res);
+      });
     }
   }
-  private validControl(valid: boolean): void {
-    if (valid) {
-      this.form.get('name').setValidators([Validators.required]);
-    } else {
-      this.form.get('name').setValidators(null);
-    }
-  }
-  private setToken(data: string): void {
+  onGoogle(): void {
+    // eslint-disable-next-line no-underscore-dangle
+    this._authService.authProvider().then((res) => {
+      if (res.user.email) {
+        this.setUserAndToken(res);
+        this.direct('/tabs/tab1');
+      }
+      console.log('datos de respuesta', res);
+    });
   }
 
+  /**
+   * @description
+   */
+  private setUserAndToken(value: firebase.auth.UserCredential): void {
+    Storage.set({key: EnumKeysStorage.user, value: JSON.stringify(value.user)});
+    Storage.set({key: EnumKeysStorage.token, value: value.user.refreshToken});
+  }
+  private direct(direct): void {
+    // eslint-disable-next-line no-underscore-dangle
+    this._zone.run(() => {
+      // eslint-disable-next-line no-underscore-dangle
+      this._router.navigate([`${direct}`]);
+    });
+  }
 }

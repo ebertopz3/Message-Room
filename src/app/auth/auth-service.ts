@@ -14,13 +14,13 @@ export class AuthService {
     return await this.angularAuth.createUserWithEmailAndPassword(user.email, user.password);
   }
 
-  public async authProvider(provider) {
+  public async authProvider() {
     return await this.angularAuth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
   }
 
-  public async authUser(email: string, password: string) {
+  public async authUser(user: IUser) {
     try {
-      return await this.angularAuth.signInWithEmailAndPassword(email, password);
+      return await this.angularAuth.signInWithEmailAndPassword(user.email, user.password);
     } catch (e) {
       console.log(e);
     }

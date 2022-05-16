@@ -5,4 +5,5 @@ export interface IUser {
   password: string;
   name?: string;
   token?: string;
+  photo?: string;
 }

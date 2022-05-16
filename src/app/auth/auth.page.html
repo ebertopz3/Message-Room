@@ -5,23 +5,24 @@
 </ion-header>
 
 <ion-content>
-<div #header>
-  <h1></h1>
+<div #header class="ion-align-items-center ion-text-center">
+  <h1>Messages Room</h1>
   <img src="assets/img/icon_message.jpg">
 
 </div>
   <form [formGroup]="form" class="ion-padding">
-    <div class="ion-margin">
-      <ion-toggle class="ion-text-right">Registrar</ion-toggle>
-    </div>
     <ion-item class="ion-margin">
+      <ion-toggle formControlName="register" class="ion-text-right"></ion-toggle>
+      <span >Registrar</span>
+    </ion-item>
+    <ion-item class="ion-margin" #emailConten>
       <ion-label>Correo</ion-label>
       <ion-input formControlName="email" ></ion-input>
     </ion-item>
-    <div class="validation-error ">
+    <div class="validation-error ion-margin">
       <ng-container *ngFor="let error of email">
-        <span
-          *ngIf="(form.get('email').hasError(error.type) && form.get('email').dirty) ||  form.get('email').touched">
+        <span style="color: #cf3c4f"
+          *ngIf="(form.get('email').hasError(error.type) && form.get('email').dirty)">
           {{error.message}}
         </span>
       </ng-container>
@@ -30,18 +31,16 @@
       <ion-label>Password</ion-label>
       <ion-input formControlName="password"></ion-input>
     </ion-item>
-    <div class="validation-error ">
+    <div class="validation-error ion-margin">
       <ng-container *ngFor="let error of password">
-        <span
-          *ngIf="(form.get('password').hasError(error.type) && form.get('password').dirty) ||  form.get('password').touched">
+        <span style="color: #cf3c4f"
+          *ngIf="(form.get('password').hasError(error.type) && form.get('password').dirty)">
           {{error.message}}
         </span>
       </ng-container>
     </div>
-    <ion-item class="ion-margin">
-      <ion-button>Eviar</ion-button>
-    </ion-item>
-
+    <div class="ion-padding ion-text-center ion-align-items-center">
+      <ion-button [disabled]="form.invalid" class="ion-text-center" expand="block" (click)="onSave()">Eviar</ion-button>
+    </div>
   </form>
-<div>{{form.value}}</div>
 </ion-content>
