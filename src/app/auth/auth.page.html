@@ -29,7 +29,8 @@
     </div>
     <ion-item class="ion-margin">
       <ion-label>Password</ion-label>
-      <ion-input formControlName="password"></ion-input>
+      <ion-input type="password" formControlName="password"></ion-input>
+      <ion-icon name="glasses-outline"></ion-icon>
     </ion-item>
     <div class="validation-error ion-margin">
       <ng-container *ngFor="let error of password">
@@ -40,7 +41,15 @@
       </ng-container>
     </div>
     <div class="ion-padding ion-text-center ion-align-items-center">
-      <ion-button [disabled]="form.invalid" class="ion-text-center" expand="block" (click)="onSave()">Eviar</ion-button>
+      <ion-button [disabled]="form.invalid" class="ion-text-center" expand="block" (click)="onSave()">
+        {{form.get('register').value ? 'Registrase' : 'Enviar'}}
+      </ion-button>
+    </div>
+    <div class="ion-padding ion-text-center ion-align-items-center">
+      <ion-button fill="outline" [disabled]="form.invalid" class="ion-text-center" expand="block" (click)="onSave()">
+        <img style="width: 20px; height: 20px" src="assets/icon/google_icon.png">
+        <span style="margin-left: 8px">Ingresar con Google</span>
+      </ion-button>
     </div>
   </form>
 </ion-content>

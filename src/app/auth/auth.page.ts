@@ -59,6 +59,9 @@ export class AuthPage implements OnInit {
       });
     }
   }
+  /**
+   * @description
+   */
   onGoogle(): void {
     // eslint-disable-next-line no-underscore-dangle
     this._authService.authProvider().then((res) => {
@@ -77,6 +80,9 @@ export class AuthPage implements OnInit {
     Storage.set({key: EnumKeysStorage.user, value: JSON.stringify(value.user)});
     Storage.set({key: EnumKeysStorage.token, value: value.user.refreshToken});
   }
+  /**
+   * @description
+   */
   private direct(direct): void {
     // eslint-disable-next-line no-underscore-dangle
     this._zone.run(() => {
