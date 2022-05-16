@@ -1,0 +1,47 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title class="ion-text-center">Ingresar</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+<div #header>
+  <h1></h1>
+  <img src="assets/img/icon_message.jpg">
+
+</div>
+  <form [formGroup]="form" class="ion-padding">
+    <div class="ion-margin">
+      <ion-toggle class="ion-text-right">Registrar</ion-toggle>
+    </div>
+    <ion-item class="ion-margin">
+      <ion-label>Correo</ion-label>
+      <ion-input formControlName="email" ></ion-input>
+    </ion-item>
+    <div class="validation-error ">
+      <ng-container *ngFor="let error of email">
+        <span
+          *ngIf="(form.get('email').hasError(error.type) && form.get('email').dirty) ||  form.get('email').touched">
+          {{error.message}}
+        </span>
+      </ng-container>
+    </div>
+    <ion-item class="ion-margin">
+      <ion-label>Password</ion-label>
+      <ion-input formControlName="password"></ion-input>
+    </ion-item>
+    <div class="validation-error ">
+      <ng-container *ngFor="let error of password">
+        <span
+          *ngIf="(form.get('password').hasError(error.type) && form.get('password').dirty) ||  form.get('password').touched">
+          {{error.message}}
+        </span>
+      </ng-container>
+    </div>
+    <ion-item class="ion-margin">
+      <ion-button>Eviar</ion-button>
+    </ion-item>
+
+  </form>
+<div>{{form.value}}</div>
+</ion-content>
