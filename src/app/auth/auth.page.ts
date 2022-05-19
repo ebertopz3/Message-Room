@@ -3,8 +3,9 @@ import { EnumKeysStorage } from '../core/enums/enum-keys-storage';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from './auth-service';
 import {Storage} from '@capacitor/storage';
-import {Router} from "@angular/router";
-import firebase from "firebase/compat/app";
+import {Router} from '@angular/router';
+import firebase from 'firebase/compat/app';
+import {Helper} from '../core/helper';
 
 
 @Component({
@@ -15,6 +16,7 @@ import firebase from "firebase/compat/app";
 export class AuthPage implements OnInit {
 
   public form: FormGroup;
+  public viewPassword = false;
   public email = [
     {type: 'required', message: 'El correo es requerido'},
     {type: 'email', message: 'Este email no es valido.'},
@@ -26,8 +28,7 @@ export class AuthPage implements OnInit {
   constructor(
     private _fb: FormBuilder,
     private _authService: AuthService,
-    private _zone: NgZone,
-    private _router: Router,
+    private _helper: Helper,
   ) {
     this.form = _fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -39,13 +40,15 @@ export class AuthPage implements OnInit {
   ngOnInit() {
   }
 
+  public onViewPassword(): void {
+    this.viewPassword = !this.viewPassword;
+  }
   public onSave(): void {
     if (this.form.get('register').value) {
       // eslint-disable-next-line no-underscore-dangle
       this._authService.createUser(this.form.getRawValue()).then((value: firebase.auth.UserCredential) => {
         if (value.user.email) {
           this.setUserAndToken(value);
-          this.direct('/tabs/tab1');
         }
       });
     } else {
@@ -53,7 +56,6 @@ export class AuthPage implements OnInit {
       this._authService.authUser(this.form.getRawValue()).then((res) => {
         if (res.user.email) {
           this.setUserAndToken(res);
-          this.direct('/tabs/tab1');
         }
         console.log('datos de respuesta', res);
       });
@@ -67,7 +69,6 @@ export class AuthPage implements OnInit {
     this._authService.authProvider().then((res) => {
       if (res.user.email) {
         this.setUserAndToken(res);
-        this.direct('/tabs/tab1');
       }
       console.log('datos de respuesta', res);
     });
@@ -79,15 +80,8 @@ export class AuthPage implements OnInit {
   private setUserAndToken(value: firebase.auth.UserCredential): void {
     Storage.set({key: EnumKeysStorage.user, value: JSON.stringify(value.user)});
     Storage.set({key: EnumKeysStorage.token, value: value.user.refreshToken});
-  }
-  /**
-   * @description
-   */
-  private direct(direct): void {
+    this.form.reset({register: false});
     // eslint-disable-next-line no-underscore-dangle
-    this._zone.run(() => {
-      // eslint-disable-next-line no-underscore-dangle
-      this._router.navigate([`${direct}`]);
-    });
+    this._helper.goDirect('/tabs/tab1');
   }
 }

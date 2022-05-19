@@ -1,7 +1,11 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      Tab 1
+    <ion-buttons slot="start" *ngIf="user">
+      <img style="width: 35px" src="{{user?.photo}}">
+      <span class="ion-margin">{{user.name}}</span>
+    </ion-buttons>
+    <ion-title class="ion-text-center">
+      Sala de Chat
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -13,5 +17,5 @@
     </ion-toolbar>
   </ion-header>
 
-  <app-explore-container name="Tab 1 page"></app-explore-container>
+  <app-explore-container name="{{user?.name}}"></app-explore-container>
 </ion-content>

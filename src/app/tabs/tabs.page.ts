@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import {Helper} from '../core/helper';
+import {GetResult, Storage} from '@capacitor/storage';
 
 @Component({
   selector: 'app-tabs',
@@ -7,6 +9,12 @@ import { Component } from '@angular/core';
 })
 export class TabsPage {
 
-  constructor() {}
-
+  constructor(
+    private helper: Helper
+  ) {}
+  public onClose(): void {
+    Storage.clear().then(() => {
+      this.helper.goDirect('/auth');
+    });
+  }
 }

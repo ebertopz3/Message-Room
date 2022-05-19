@@ -29,8 +29,8 @@
     </div>
     <ion-item class="ion-margin">
       <ion-label>Password</ion-label>
-      <ion-input type="password" formControlName="password"></ion-input>
-      <ion-icon name="glasses-outline"></ion-icon>
+      <ion-input type="{{viewPassword ? 'text' : 'password'}}" formControlName="password"></ion-input>
+      <ion-icon name="glasses-outline" (click)="onViewPassword()"></ion-icon>
     </ion-item>
     <div class="validation-error ion-margin">
       <ng-container *ngFor="let error of password">
@@ -46,7 +46,7 @@
       </ion-button>
     </div>
     <div class="ion-padding ion-text-center ion-align-items-center">
-      <ion-button fill="outline" [disabled]="form.invalid" class="ion-text-center" expand="block" (click)="onSave()">
+      <ion-button fill="outline" class="ion-text-center" expand="block" (click)="onGoogle()">
         <img style="width: 20px; height: 20px" src="assets/icon/google_icon.png">
         <span style="margin-left: 8px">Ingresar con Google</span>
       </ion-button>
