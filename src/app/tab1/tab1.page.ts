@@ -63,7 +63,7 @@ export class Tab1Page implements OnInit, OnDestroy {
       .then(() => this.form.get('message').setValue(''))
       .catch((e) => console.log('error', e));
   }
-  validDay(date: string): boolean {
+  public validDay(date: string): boolean {
     const validDate = new Date(date);
     return (this.dateIn.getDay() === validDate.getDay());
   }

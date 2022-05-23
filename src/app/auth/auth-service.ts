@@ -47,11 +47,9 @@ export class AuthService {
       message: text ? text :'Error de al ingresar.',
       buttons: ['OK']
     });
-
     await alert.present();
 
     const { role } = await alert.onDidDismiss();
-    console.log('onDidDismiss resolved with role', role);
   }
 
 }

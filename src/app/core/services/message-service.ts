@@ -15,9 +15,6 @@ export class MessageService {
     this.messagesRef = fireDataBase.list<IMessage>('/chat');
   }
   public creteMessage(messagge: IMessage): firebase.database.ThenableReference {
-    /*firebase.database().ref('chat').push(messagge, (error) => {
-      console.log('error', error);
-    });*/
     try {
       return this.messagesRef.push(messagge);
     } catch (e) {
@@ -25,9 +22,6 @@ export class MessageService {
     }
   }
   public getAllChat(call: (data) => void): AngularFireList<IMessage> {
-    /*firebase.database().ref('chat').on('value', call, (val) => {
-      console.log('erro actualizar', val);
-    });*/
     try {
       return this.messagesRef;
     } catch (e) {

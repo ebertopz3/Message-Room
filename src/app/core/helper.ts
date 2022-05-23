@@ -22,6 +22,13 @@ export class Helper {
     });
   }
 
+  public async getStorage(key: string): Promise<any> {
+    const data: GetResult = await Storage.get({key});
+    return JSON.parse(data.value);
+  }
+  public async setEstorage(key: string, data: any): Promise<void> {
+    await Storage.set({key, value: data});
+  }
   public async generateDataUser(): Promise<IUser> {
     const data: GetResult = await Storage.get({key: EnumKeysStorage.user});
     const user = JSON.parse(data.value);
