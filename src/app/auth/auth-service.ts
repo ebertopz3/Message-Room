@@ -36,6 +36,9 @@ export class AuthService {
     }
   }
 
+  public async closeSesion(): Promise<void> {
+    return this.angularAuth.signOut();
+  }
   private async presentAlertError(title?: string, text?: string) {
     const alert = await this.alertController.create({
       cssClass: 'my-custom-class',

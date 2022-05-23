@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start" *ngIf="user">
-      <img style="width: 35px" src="{{user?.photo}}">
+      <img style="width: 35px; border-radius: 50px" src="{{user?.photo}}">
       <span class="ion-margin">{{user.name}}</span>
     </ion-buttons>
     <ion-title class="ion-text-center">
@@ -22,11 +22,12 @@
 <ion-content #contentChat [fullscreen]="true" scroll>
   <ng-container *ngFor="let item of messages">
     <ion-card class="ion-color-primary" [ngClass]="(item.user_id !== user.id) ? 'ion-margin-end' : 'ion-margin-start'">
-      <ion-card-header >
-        <ion-card-title >{{item.name}}</ion-card-title>
+      <ion-card-header (click)="onSelectUser(item)">
+        <ion-card-title >{{(item.name === user.name) ? 'Yo' : item.name}}</ion-card-title>
       </ion-card-header>
       <ion-card-content>
-        <p>{{item.create_at | date: 'd-MM, hh:mm p'}}</p>
+        <p style="color: #cf3c4f" class="ion-text-right">{{item.create_at | date: validDay(item.create_at) ? 'hh:mm a' : 'EEEE, hh:mm a'}}</p>
+
         {{item.message}}
       </ion-card-content>
     </ion-card>

@@ -48,16 +48,15 @@ export class AuthPage implements OnInit {
       // eslint-disable-next-line no-underscore-dangle
       this._authService.createUser(this.form.getRawValue()).then((value: firebase.auth.UserCredential) => {
         if (value.user.email) {
-          this.setUserAndToken(value);
+          this.setUserAndToken(value).then();
         }
       });
     } else {
       // eslint-disable-next-line no-underscore-dangle
       this._authService.authUser(this.form.getRawValue()).then((res) => {
         if (res.user.email) {
-          this.setUserAndToken(res);
+          this.setUserAndToken(res).then();
         }
-        console.log('datos de respuesta', res);
       });
     }
   }
@@ -68,18 +67,17 @@ export class AuthPage implements OnInit {
     // eslint-disable-next-line no-underscore-dangle
     this._authService.authProvider().then((res) => {
       if (res.user.email) {
-        this.setUserAndToken(res);
+        this.setUserAndToken(res).then();
       }
-      console.log('datos de respuesta', res);
     });
   }
 
   /**
    * @description
    */
-  private setUserAndToken(value: firebase.auth.UserCredential): void {
-    Storage.set({key: EnumKeysStorage.user, value: JSON.stringify(value.user)});
-    Storage.set({key: EnumKeysStorage.token, value: value.user.refreshToken});
+  private async setUserAndToken(value: firebase.auth.UserCredential): Promise<void> {
+    await Storage.set({key: EnumKeysStorage.user, value: JSON.stringify(value.user)});
+    await Storage.set({key: EnumKeysStorage.token, value: value.user.refreshToken});
     this.form.reset({register: false});
     // eslint-disable-next-line no-underscore-dangle
     this._helper.goDirect('/tabs/tab1');

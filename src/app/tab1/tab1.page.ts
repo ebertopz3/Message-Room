@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {IUser} from '../core/interfaces/user';
 import {Helper} from '../core/helper';
 import {MessageService} from '../core/services/message-service';
@@ -12,12 +12,13 @@ import {SnapshotAction} from '@angular/fire/compat/database';
   templateUrl: 'tab1.page.html',
   styleUrls: ['tab1.page.scss']
 })
-export class Tab1Page implements OnInit{
+export class Tab1Page implements OnInit, OnDestroy {
 
   @ViewChild('contentChat') contentChat: HTMLIonContentElement;
   public user: IUser;
   public messages: IMessage[] = [];
-  form: FormGroup;
+  public form: FormGroup;
+  public dateIn: Date;
   private subscriptions: Subscription = new Subscription();
   constructor(
     private helper: Helper,
@@ -28,6 +29,7 @@ export class Tab1Page implements OnInit{
     helper.generateDataUser().then((data) => {
       this.user = data;
     });
+    this.dateIn = new Date();
   }
 
   ngOnInit() {
@@ -42,6 +44,10 @@ export class Tab1Page implements OnInit{
       console.log('datos del chat', chat);
     });*/
   }
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
+
   public onSendMessage(): void {
     const date = new Date();
     const message: IMessage = {
@@ -53,7 +59,16 @@ export class Tab1Page implements OnInit{
       user_id: `${this.user.id}`,
     };
     // eslint-disable-next-line no-underscore-dangle
-    this._messages.creteMessage(message).then().catch((e) => console.log('error', e));
+    this._messages.creteMessage(message)
+      .then(() => this.form.get('message').setValue(''))
+      .catch((e) => console.log('error', e));
+  }
+  validDay(date: string): boolean {
+    const validDate = new Date(date);
+    return (this.dateIn.getDay() === validDate.getDay());
+  }
+  onSelectUser(data: IUser): void {
+
   }
   private generateMessages(messages: (SnapshotAction<IMessage>)[]): IMessage[] {
     const data: IMessage[] = [];
@@ -67,4 +82,6 @@ export class Tab1Page implements OnInit{
       this.contentChat.scrollToBottom(400).then();
     }, 800);
   }
+
+
 }
