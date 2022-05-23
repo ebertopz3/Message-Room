@@ -10,12 +10,36 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<!--<ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">Tab 1</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <app-explore-container name="{{user?.name}}"></app-explore-container>
+  &lt;!&ndash;<app-explore-container name="{{user?.name}}"></app-explore-container>&ndash;&gt;
+</ion-content>-->
+<ion-content #contentChat [fullscreen]="true" scroll>
+  <ng-container *ngFor="let item of messages">
+    <ion-card class="ion-color-primary" [ngClass]="(item.user_id !== user.id) ? 'ion-margin-end' : 'ion-margin-start'">
+      <ion-card-header >
+        <ion-card-title >{{item.name}}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p>{{item.create_at | date: 'd-MM, hh:mm p'}}</p>
+        {{item.message}}
+      </ion-card-content>
+    </ion-card>
+  </ng-container>
+
 </ion-content>
+
+<ion-footer [formGroup]="form">
+  <ion-item>
+    <ion-input placeholder="Mensaje" formControlName="message"></ion-input>
+    <ion-buttons end>
+      <ion-button (click)="onSendMessage()"><ion-icon name="send"></ion-icon></ion-button>
+    </ion-buttons>
+  </ion-item>
+
+</ion-footer>

@@ -51,13 +51,7 @@ export class MessageService {
     }
   }
 
-  public listenDataMessages(call: (data: SnapshotAction<IMessage>[]) => void): Observable<SnapshotAction<IMessage>[]> {
-    return this.messagesRef.snapshotChanges().pipe(
-      tap(
-        (value) => {
-          call(value);
-        }
-      )
-    );
+  public listenDataMessages(call?: (data: SnapshotAction<IMessage>[]) => void): Observable<SnapshotAction<IMessage>[]> {
+    return this.messagesRef.snapshotChanges();
   }
 }

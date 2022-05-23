@@ -25,7 +25,6 @@ export class Helper {
   public async generateDataUser(): Promise<IUser> {
     const data: GetResult = await Storage.get({key: EnumKeysStorage.user});
     const user = JSON.parse(data.value);
-    console.log('datos de store', user);
     return {
       email: user.email,
       photo: user.photoURL ? user.photoURL : 'assets/img/user_blanck.png',
