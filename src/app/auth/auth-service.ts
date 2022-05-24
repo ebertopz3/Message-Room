@@ -4,6 +4,7 @@ import firebase from 'firebase/compat/app';
 import { IUser } from '../core/interfaces/user';
 import { AlertController } from '@ionic/angular';
 
+
 @Injectable({providedIn: 'root'})
 export class AuthService {
   constructor(
@@ -38,6 +39,9 @@ export class AuthService {
 
   public async closeSesion(): Promise<void> {
     return this.angularAuth.signOut();
+  }
+  public getUser(id: string): void {
+
   }
   private async presentAlertError(title?: string, text?: string) {
     const alert = await this.alertController.create({

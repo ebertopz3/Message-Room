@@ -27,7 +27,7 @@ export class Helper {
     return JSON.parse(data.value);
   }
   public async setEstorage(key: string, data: any): Promise<void> {
-    await Storage.set({key, value: data});
+    await Storage.set({key, value: JSON.stringify(data)});
   }
   public async generateDataUser(): Promise<IUser> {
     const data: GetResult = await Storage.get({key: EnumKeysStorage.user});

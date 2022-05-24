@@ -23,7 +23,7 @@
   <ng-container *ngFor="let item of messages">
     <ion-card class="ion-color-primary" [ngClass]="(item.user_id !== user.id) ? 'ion-margin-end' : 'ion-margin-start'">
       <ion-card-header (click)="onSelectUser(item)">
-        <ion-card-title >{{(item.name === user.name) ? 'Yo' : item.name}}</ion-card-title>
+        <ion-card-title [ngClass]="(item.user_id !== user.id) ? 'pointer' : ''" >{{(item.name === user.name) ? 'Yo' : item.name}}</ion-card-title>
       </ion-card-header>
       <ion-card-content>
         <p style="color: #cf3c4f" class="ion-text-right">{{item.create_at | date: validDay(item.create_at) ? 'hh:mm a' : 'EEEE, hh:mm a'}}</p>

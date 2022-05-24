@@ -6,13 +6,16 @@ import {Subscription} from 'rxjs';
 import {IMessage} from '../core/interfaces/message';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {SnapshotAction} from '@angular/fire/compat/database';
+import {EnumKeysStorage} from '../core/enums/enum-keys-storage';
+import {ViewDidEnter} from '@ionic/angular';
+import {user} from "@angular/fire/auth";
 
 @Component({
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
   styleUrls: ['tab1.page.scss']
 })
-export class Tab1Page implements OnInit, OnDestroy {
+export class Tab1Page implements OnInit, OnDestroy, ViewDidEnter {
 
   @ViewChild('contentChat') contentChat: HTMLIonContentElement;
   public user: IUser;
@@ -26,9 +29,6 @@ export class Tab1Page implements OnInit, OnDestroy {
     private _fb: FormBuilder,
   ) {
     this.form = _fb.group({message: ''});
-    helper.generateDataUser().then((data) => {
-      this.user = data;
-    });
     this.dateIn = new Date();
   }
 
@@ -40,12 +40,18 @@ export class Tab1Page implements OnInit, OnDestroy {
         this.fullScroll();
       }
     ));
-   /* this.messages.listenChat((chat) => {
-      console.log('datos del chat', chat);
-    });*/
   }
+
+  ionViewDidEnter() {
+    this.helper.generateDataUser().then((data) => {
+      this.user = data;
+    });
+  }
+
   ngOnDestroy(): void {
+    this.user = undefined;
     this.subscriptions.unsubscribe();
+
   }
 
   public onSendMessage(): void {
@@ -67,8 +73,12 @@ export class Tab1Page implements OnInit, OnDestroy {
     const validDate = new Date(date);
     return (this.dateIn.getDay() === validDate.getDay());
   }
-  onSelectUser(data: IUser): void {
-
+  onSelectUser(data: IMessage): void {
+    if (data.user_id !== this.user.id) {
+      this.helper.setEstorage(EnumKeysStorage.userIn, {name: data.name, id: data.user_id}).then(() => {
+        this.helper.goDirect('/tabs/tab2');
+      });
+    }
   }
   private generateMessages(messages: (SnapshotAction<IMessage>)[]): IMessage[] {
     const data: IMessage[] = [];

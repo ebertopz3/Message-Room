@@ -1,17 +1,34 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      Tab 2
-    </ion-title>
+    <ion-buttons slot="start" *ngIf="userIn">
+      <img style="width: 35px; border-radius: 50px" src="assets/img/user_blanck.png">
+      <span class="ion-margin">{{userIn.name}}</span>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 2</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ng-container *ngFor="let item of messages">
+    <ion-card class="ion-color-primary" [ngClass]="(item.user_id !== user.id) ? 'ion-margin-end' : 'ion-margin-start'">
+      <ion-card-header >
+        <ion-card-title >{{(item.name === user.name) ? 'Yo' : item.name}}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p style="color: #cf3c4f" class="ion-text-right">{{item.create_at | date: validDay(item.create_at) ? 'hh:mm a' : 'EEEE, hh:mm a'}}</p>
 
-  <app-explore-container name="Sala personal"></app-explore-container>
+        {{item.message}}
+      </ion-card-content>
+    </ion-card>
+  </ng-container>
+
+ <!-- <app-explore-container name="Sala personal"></app-explore-container>-->
 </ion-content>
+<ion-footer [formGroup]="form">
+  <ion-item>
+    <ion-input placeholder="Mensaje" formControlName="message"></ion-input>
+    <ion-buttons end>
+      <ion-button (click)="onSendMessage()"><ion-icon name="send"></ion-icon></ion-button>
+    </ion-buttons>
+  </ion-item>
+
+</ion-footer>

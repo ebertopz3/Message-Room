@@ -9,6 +9,7 @@ import {tap} from 'rxjs/operators';
 export class MessageService {
 
   public messagesRef: AngularFireList<IMessage>;
+  public newMessagesRef: AngularFireList<IMessage>;
   constructor(
     private fireDataBase: AngularFireDatabase
   ) {
@@ -47,5 +48,13 @@ export class MessageService {
 
   public listenDataMessages(call?: (data: SnapshotAction<IMessage>[]) => void): Observable<SnapshotAction<IMessage>[]> {
     return this.messagesRef.snapshotChanges();
+  }
+  public onCreateNewChat(chat: string): Observable<SnapshotAction<IMessage>[]> {
+    this.newMessagesRef = this.fireDataBase.list<IMessage>(`/${chat}`);
+    return this.newMessagesRef.snapshotChanges();
+  }
+
+  public createInMessage(message: IMessage): firebase.database.ThenableReference {
+    return this.newMessagesRef.push(message);
   }
 }
